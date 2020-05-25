@@ -1,3 +1,6 @@
+/**
+ * Approach - to understand the contribution of each number in making the subsets
+*/
 public
 class Solution
 {
