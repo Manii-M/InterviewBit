@@ -53,6 +53,71 @@ Explanation 1:
 Explanation 2:
 
  Any 2 points lie on a same line.
- *
- * Approach - 
+ /*
+ * Approach - slope will be the same for the points which is on the same line
 */
+
+
+public
+class Solution
+{
+
+public
+    int gcd(int a, int b)
+    {
+        if (b == 0)
+            return a;
+        return gcd(b, a % b);
+    }
+public
+    int solve(ArrayList<Integer> A, ArrayList<Integer> B)
+    {
+        int answer = 0;
+
+        for (int i = 0; i < A.size() - 1; i++)
+        {
+            HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+            int same_points = 0, vertical_points = 0;
+
+            int x1 = A.get(i), y1 = B.get(i);
+
+            int current_max = 0;
+
+            for (int j = i + 1; j < A.size(); j++)
+            {
+                int x2 = A.get(j), y2 = B.get(j);
+
+                if (x1 == x2 && y1 == y2)
+                {
+                    same_points++;
+                }
+                else if (x1 == x2)
+                {
+                    vertical_points++;
+                }
+
+                else
+                {
+                    int dy = y2 - y1;
+                    int dx = x2 - x1;
+                    int g = gcd(dx, dy);
+                    dy /= g;
+                    dx /= g;
+
+                    String slope = dx + " " + dy; //making a pair
+                    if (map.containsKey(slope))
+                        map.put(slope, map.get(slope) + 1);
+                    else
+                        map.put(slope, 1);
+                    current_max = Math.max(current_max, map.get(slope)); //keeping max frequency with same slope
+                }
+
+                current_max = Math.max(current_max, vertical_points); //checking if vertical points are more then the similar slops point
+            }
+            //   map.forEach((k,v)-> System.out.println(k.x+ " "+k.y+" "+v));
+            answer = Math.max(answer, (current_max + same_points + 1)); //taking out the maximum icluding similar points and 1 is the current point
+        }
+        return answer;
+    }
+}
