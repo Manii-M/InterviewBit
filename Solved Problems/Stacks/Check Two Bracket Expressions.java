@@ -52,33 +52,46 @@ Explanation 1:
 Explanation 2:
 
  Both the expression are different.
+/*pproach - we will use stack to and we will see before every opening '(' is there any sign and keep updating the sign variable
+and when we see ')' we will remove the opening '(' and again update the sign variable bases on the sign just before the '('.
  *
- * Approach - use stack to identify the signs before '(' and before each charcter
- * TC- O(n)
+ * TC - O(n)
+ * SC - O(n)
+*/
+/*pproach - we will use stack to and we will see before every opening '(' is there any sign and keep updating the sign variable
+and when we see ')' we will remove the opening '(' and again update the sign variable bases on the sign just before the '('.
+ *
+ * TC - O(n)
+ * SC - O(n)
 */
 public
 class Solution
 {
 public
-    String kato(String A)
+    ArrayList<Integer> solveExpression(String A)
     {
         int sign = 1;
         int[] signs = new int[26];
         Stack<Integer> s = new Stack<Integer>();
+        ArrayList<Integer> a_signs = new ArrayList<Integer>();
+        for (int i = 0; i < 26; i++)
+            a_signs.add(1);
         for (int i = 0; i < A.length(); i++)
         {
             if (A.charAt(i) == '(')
             {
                 s.push(i);
-                if (i > 0 && A.charAt(i - 1) == '-')
+                if (i > 0 && A.charAt(i - 1) == '-') //checking any sign just before the '('
                     sign *= -1;
             }
-            else if (A.charAt(i) == ')')
+            else if (A.charAt(i) == ')') //removing the open '(' and updating the sign
             {
-                while (!s.empty() && s.peek() != '(')
+                while (!s.empty() && A.charAt(s.peek()) != '(')
                     s.pop();
+
                 if (!s.empty() && s.peek() > 0 && A.charAt(s.peek() - 1) == '-')
                     sign *= -1;
+
                 if (!s.empty())
                     s.pop();
             }
@@ -90,31 +103,22 @@ public
                 signs[A.charAt(i) - 97] = sign * ch_sign;
             }
         }
-        String answer = "";
+
         for (int i = 0; i < A.length(); i++)
         {
-            if (A.charAt(i) >= 97 && A.charAt(i) <= 123)
-            {
-
-                if (signs[A.charAt(i) - 97] == -1)
-                    answer = answer + "-" + A.charAt(i);
-                else if (answer.length() > 0)
-                    answer += "+" + A.charAt(i);
-                else
-                    answer += A.charAt(i);
-            }
+            if (A.charAt(i) >= 'a' && A.charAt(i) <= 'z')
+                a_signs.set(A.charAt(i) - 97, signs[A.charAt(i) - 97]);
         }
-        return answer;
+        return a_signs;
     }
 public
     int solve(String A, String B)
     {
-
-        String a = kato(A);
-        String b = kato(B);
-        // System.out.println(a);
-        // System.out.println(b);
-        return a.equals(b) ? 1 : 0;
-        // return 0;
+        ArrayList<Integer> a_signs = solveExpression(A);
+        ArrayList<Integer> b_signs = solveExpression(B);
+        for (int i = 0; i < 26; i++)
+            if (a_signs.get(i) != b_signs.get(i))
+                return 0;
+        return 1;
     }
 }
